@@ -2,58 +2,6 @@
     {% include "head.html" %}
     <body>
         {% include "banner.html" %}
-        <form>
-            <div class="input-group">
-                <label for="new-name">Name</label>
-                <input type="text" required id="new-name">
-                <hr class="inactive-text-bar" />
-                <hr class="active-text-bar" />
-            </div>
-            <div class="input-group">
-                <label for="new-name">Price</label>
-                <input type="text" required id="new-price">
-                <hr class="inactive-text-bar" />
-                <hr class="active-text-bar" />
-            </div>
-            <div class="input-group">
-                <label for="new-name">Quantity</label>
-                <input type="text" required id="new-quantity" onfocus="barFocus" onBlue="barBlur" />
-                <hr class="inactive-text-bar" />
-                <hr class="active-text-bar" />
-            </div>
-            <button type="submit">Add</button>
-            <button class="cancel-button" type="button" onclick="goHome">Cancel</button>
-        </form>
-        <script>
-            window.addEventListener('load', function() {
-                console.log('window loaded')
-                let inputs = document.querySelectorAll('.input-group > input');
-                for (var i = 0; i < inputs.length;i++) {
-                    inputs[i].addEventListener('focus', barFocus);
-                    inputs[i].addEventListener('blur', barBlur);
-                }
-                let cancel = document.querySelector('.cancel-button');
-                cancel.addEventListener('click', goHome);
-            });
-            function goHome() {
-                console.log('going home')
-                let link = document.createElement('a');
-                window.location.href = '/'
-            }
-            function barFocus(event) {
-                console.log('barFocus', event.currentTarget);
-                let input = event.currentTarget;
-                let inputGroup = input.parentElement;
-                let activeBar = inputGroup.querySelector('.active-text-bar');
-                activeBar.setAttribute('class', 'active-text-bar active')
-            }
-            function barBlur(event) {
-                console.log('barBlur', event.currentTarget);
-                let input = event.currentTarget;
-                let inputGroup = input.parentElement;
-                let activeBar = inputGroup.querySelector('.active-text-bar')
-                activeBar.setAttribute('class', 'active-text-bar')
-            }
-        </script>
+        
     </body>
 </html>
