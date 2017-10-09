@@ -1,0 +1,61 @@
+* {
+    box-sizing: border-box;
+
+}
+
+button {
+    border-radius: 5px;
+    border: none;
+    padding: 5px 10px;
+    background: green;
+    box-shadow: 1px 1px 1px 0 rgba(0, 0, 0, 0.5);
+
+}
+
+button:hover {
+    filter: hue-rotate(-90deg);
+}
+
+button:active {
+    transform: translate(1px 1px);
+}
+
+.input-group {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1px;
+    grid-template-areas: "label" "input" "bar"
+}
+
+.input-group > * {
+    width: 100%;
+}
+
+.input-group > label {
+    grid-area: label;
+}
+
+.input-group > input {
+    grid-area: input;
+}
+
+.input-group > hr {
+    border-style: solid;
+    border-bottom-width: 1px;
+    margin: 0;
+    padding: 0;
+    grid-area: bar;
+}
+
+.inactive-text-bar {
+    border-color: rgb(170, 169, 169);
+}
+
+.active-text-bar {
+    border-color: rgb(83, 253, 83);
+    transform: scale(0);
+}
+
+.active-text-bar.active {
+    transform: scale(1);
+    transition: 1s linear
+}

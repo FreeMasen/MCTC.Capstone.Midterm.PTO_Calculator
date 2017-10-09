@@ -1,0 +1,78 @@
+<html>
+    {% include "head.html" %}
+</html>
+<body>
+    {% include "banner.html" %}
+    <main>
+        <h1 class="sprockets-title">Sprockets</h1>
+        <table class="sprocket-table">
+            <colgroup>
+                <col class="id-col" />
+                <col class="name-col" />
+                <col class="price-col" />
+                <col class="width-col" />
+                <col class="height-col" />
+                <col class="price-col" />
+                <col class="quantity-col" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Width Inches</th>
+                    <th>Height Inches</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for gear in sprockets %}
+                <tr>
+                    <td>gear.id</td>
+                    <td>gear.name</td>
+                    <td>gear.width</td>
+                    <td>gear.height</td>
+                    <td>gear.price</td>
+                    <td>gear.quantity</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h1 class="cogs-title">Cogs</h1>
+        <table class="cogs-table">
+            <colgroup>
+                <col class="id-col" />
+                <col class="name-col" />
+                <col class="price-col" />
+                <col class="width-col" />
+                <col class="height-col" />
+                <col class="price-col" />
+                <col class="quantity-col" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Width Inches</th>
+                    <th>Height Inches</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for gear in sprockets %}
+                <tr>
+                    <td>gear.id</td>
+                    <td>gear.name</td>
+                    <td>gear.width</td>
+                    <td>gear.height</td>
+                    <td>gear.price</td>
+                    <td>gear.quantity</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+</body>
