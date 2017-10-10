@@ -5,7 +5,7 @@ from sqlalchemy import Table, Column, MetaData,\
 create_engine, Integer, String, Boolean, DateTime,\
 Float, ForeignKey
 from sqlalchemy.orm import mapper, sessionmaker, relationship
-from src.models import Employee, RequestedTime, EarnedTime
+from src.models import Employee, RequestedTime, EarnedTime, User, Role, UserRole
 
 class Database():
     '''Database interface'''
@@ -64,7 +64,7 @@ class Database():
         t = Table('earned_time', self.metadata,\
         Column('id', Integer, primary_key=True),\
         Column('employee_id', Integer, ForeignKey('employees.id')),\
-        Column('week_earned', Integer),\
+        Column('pay_date', DateTime),\
         Column('hours', Float))
         mapper(EarnedTime,t)
         return t
@@ -76,3 +76,20 @@ class Database():
         Column('hours', Float))
         mapper(RequestedTime, t)
         return t
+    def _map_user(self):
+        t = Table('users', self.metadata,\
+        Column('id', Integer, primary_key=True),\
+        Column('username', String),\
+        Column('password_hash', String))
+        mapper(User, t)
+    def _map_roles(self):
+        t = Table('roles', self.metadata,\
+        Column('id', Integer, primary_key=True,\
+        Column('name', String)))
+        mapper(Role, t)
+        return t
+    def _map_user_roles(self):
+        t = Table('user_roles', self.metadata,\
+        Column('user_id', Integer),\
+        Column('role_id', Integer))
+        mapper(UserRole, t)

@@ -20,25 +20,25 @@ button:active {
     transform: translate(1px 1px);
 }
 
-.input-group {
+.text-box-container {
     display: grid;
     grid-template-rows: 1fr 1fr 1px;
     grid-template-areas: "label" "input" "bar"
 }
 
-.input-group > * {
+.text-box-container > * {
     width: 100%;
 }
 
-.input-group > label {
+.text-box-container > .text-box-label {
     grid-area: label;
 }
 
-.input-group > input {
+.text-box-container > .text-box-input {
     grid-area: input;
 }
 
-.input-group > hr {
+.text-box-container > hr {
     border-style: solid;
     border-bottom-width: 1px;
     margin: 0;
@@ -46,16 +46,16 @@ button:active {
     grid-area: bar;
 }
 
-.inactive-text-bar {
+.text-box-container > .inactive-bar {
     border-color: rgb(170, 169, 169);
 }
 
-.active-text-bar {
+.text-box-container > .active-bar {
     border-color: rgb(83, 253, 83);
     transform: scale(0);
 }
 
-.active-text-bar.active {
+.text-box-container > .active-text-bar.active {
     transform: scale(1);
     transition: 1s linear
 }

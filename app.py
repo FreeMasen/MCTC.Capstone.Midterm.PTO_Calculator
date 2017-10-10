@@ -1,4 +1,4 @@
-from src.server import app
-from src.models import Employee, EarnedTime, RequestedTime
+'''PTO Calculator Entry Point'''
 if __name__ == '__main__':
+    from website.server import app
     app.run()
