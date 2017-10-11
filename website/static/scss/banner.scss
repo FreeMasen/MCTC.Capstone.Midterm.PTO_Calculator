@@ -1,0 +1,69 @@
+@import 'colors';
+nav {
+    display: grid;
+    grid-template-columns: auto auto 1fr auto auto auto 1fr auto;
+    grid-template-rows: 50px;
+    grid-template-areas:
+        "brand name empty new admin approve blank sign";
+    box-shadow:  1px 1px 1px 1px $neutral;
+    padding: 5px;
+    grid-gap: 5px;
+    background: #508FF4;
+}
+
+.banner-image {
+    grid-area: brand;
+}
+
+.banner-text {
+    grid-area: name;
+    color: $accent;
+    display: block;
+    margin: auto 5px;
+    text-decoration: none;
+    font-size: 24pt;
+    font-weight: bold;
+    :visited {
+        color: rgba(63, 243, 213, 1);
+    }
+}
+
+
+
+.nav-link {
+    display: block;
+    background: rgba(63, 243, 213, 1);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 2px;
+    border: 1px solid transparent;
+    margin: auto;
+    padding: 10px 20px;
+    
+    &.new {
+        grid-area: new;
+    }
+    
+    &.admin {
+        grid-area: admin;
+    }
+    
+    &.approve {
+        grid-area: approve;
+    }
+    
+    &.sign {
+        grid-area: sign;
+    }
+
+    :visited {
+        color: #fff;
+    }
+
+    :hover {
+        color: rgba(63, 243, 213, 1);
+        border-color: rgba(63, 243, 213, 1);
+        background-color: #fff;
+    }
+}
+

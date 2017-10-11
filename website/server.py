@@ -1,5 +1,5 @@
 from flask import Flask, templating, redirect, render_template, session, request
-app = Flask(__name__, '/static', static_folder='/static', template_folder='/templates')
+app = Flask(__name__, '/static', static_folder='static', template_folder='templates')
 app.debug = True
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 @app.route('/', methods=['get'])

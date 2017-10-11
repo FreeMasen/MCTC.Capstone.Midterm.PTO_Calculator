@@ -1,5 +1,6 @@
 window.addEventListener('onload', () => {
-    registerTextBoxes()
+    console.log('window loaded');
+    registerTextBoxes();
 });
 
 function registerTextBoxes() {
@@ -12,6 +13,7 @@ function registerTextBoxes() {
 }
 
 function textBoxFocus(event) {
+    console.log('textBoxFocus', element.currentTarget);
     let textbox = event.currentTarget;
     let activeBar = getActiveBar(textbox);
     if (!activeBar) return;
@@ -19,6 +21,7 @@ function textBoxFocus(event) {
 }
 
 function textBoxBlur(event) {
+    console.log('textBoxBlur', element.currentTarget);
     let textbox = event.currentTarget;
     let activeBar = getActiveBar(textbox);
     if (!activeBar) return;

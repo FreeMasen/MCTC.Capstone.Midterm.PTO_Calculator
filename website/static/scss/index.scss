@@ -1,0 +1,73 @@
+@import 'colors';
+
+.balances {
+    display: grid;
+    grid-template-columns: 50px repeat(4, 0.25fr) 0.5fr;
+    grid-template-rows: repeat(3, 0.5fr);
+    grid-gap: 0 5px;
+    grid-template-areas:
+        "blank1 earnings-header        earnings-header         blank               blank              blank"
+        "blank1 earnings-earned        earnings-requested      earnings-taken      earnings-total     blank2"
+        "blank1 earnings-earned-num    earnings-requested-num  earnings-taken-num  earnings-total-num blank2";
+    align-items: center;
+}
+
+#earnings-header {
+    grid-area: earnings-header;
+}
+
+#earned-hours-title {
+    grid-area: earnings-earned;
+}
+
+#earned-hours-number {
+    grid-area: earnings-earned-num
+}
+
+#requested-hours-title {
+    grid-area: earnings-requested;
+}
+
+#requested-hours-number {
+    grid-area: earnings-requested-num;
+}
+
+#taken-hours-title {
+    grid-area: earnings-taken;
+}
+
+#taken-hours-number {
+    grid-area: earnings-taken-num;
+}
+
+#remaining-hours-title {
+    grid-area: earnings-total;
+}
+
+#remaining-hours-number {
+    grid-area: earnings-total-num;
+}
+
+.balance-title {
+    display: block;
+    background: $primary;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0px;
+    height: 100%;
+    border-radius: 5px 5px 0 0;
+    z-index: 2;
+    font-size: 14pt;
+}
+
+.balance-total {
+    padding: 10px;
+    background: $accent;
+    color: #fff;
+    text-align: center;
+    height: 100%;
+    vertical-align: center;
+    border-radius: 0 0 5px 5px;
+    z-index: 1;
+    font-size: 24pt;
+}

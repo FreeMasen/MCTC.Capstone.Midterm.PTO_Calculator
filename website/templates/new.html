@@ -1,10 +1,7 @@
-{% import "input.html" %}
-<html>
-    {% include "head.html" %}
-    <body>
-        {% include "banner.html" %}
-        <form id="new-request">
-            {textbox('Start Date', 'start-date', )}
-        </form>
-    </body>
-</html>
+{%extends "layout.html"%}
+{% import "textbox.html" as input %}
+{%block content%}
+<form id="new-request">
+    {{input.textbox('Start Date', 'start-date' )}}
+</form>
+{%endblock%}

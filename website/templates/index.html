@@ -1,10 +1,15 @@
-<html>
-    {% include "head.html" %}
-</html>
-<body>
-    {% include "banner.html" %}
-    <main>
-        
-    </main>
-    {% include "scripts.html" %}
-</body>
+{%extends "layout.html"%}
+{%block content %}
+<link type="text/css" rel="stylesheet" href="static/css/index.css" />
+    <div class="balances">
+        <h1 class="balance-header" id="earnings-header">Earnings</h1>
+        <span class="balance-title" id="earned-hours-title">Earned Hours</span>
+        <span class="balance-total" id="earned-hours-number">25</span>
+        <span class="balance-title" id="requested-hours-title">Requested Hours</span>
+        <span class="balance-total" id="requested-hours-number">15</span>
+        <span class="balance-title" id="taken-hours-title">Taken Hours</span>
+        <span class="balance-total" id="taken-hours-number">5</span>
+        <span class="balance-title total" id="remaining-hours-title">Remaining Balance</span>
+        <span class="balance-total total" id="remaining-hours-number">5</span>
+    </div>
+{%endblock%}
