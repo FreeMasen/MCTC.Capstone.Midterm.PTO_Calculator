@@ -3,12 +3,15 @@
 .balances {
     display: grid;
     grid-template-columns: 50px repeat(4, 0.25fr) 0.5fr;
-    grid-template-rows: repeat(3, 0.5fr);
+    grid-template-rows: repeat(5, 0.5fr) 2fr;
     grid-gap: 0 5px;
     grid-template-areas:
-        "blank1 earnings-header        earnings-header         blank               blank              blank"
-        "blank1 earnings-earned        earnings-requested      earnings-taken      earnings-total     blank2"
-        "blank1 earnings-earned-num    earnings-requested-num  earnings-taken-num  earnings-total-num blank2";
+        "blank1 earnings-header         earnings-header         blank               blank               blank"
+        "blank1 earnings-earned         earnings-requested      earnings-taken      earnings-total      blank2"
+        "blank1 earnings-earned-num     earnings-requested-num  earnings-taken-num  earnings-total-num  blank2"
+        "blank1 pending-header          pending-header          blank3              blank3              blank2"
+        "blank1 pending-table-title     pending-table-title     pending-table-title pending-table-title blank2"
+        "blank1 pending-table-values     pending-table-values     pending-table-values pending-table-values blank2";
     align-items: center;
 }
 
@@ -71,3 +74,44 @@
     z-index: 1;
     font-size: 24pt;
 }
+
+.pending-header {
+    grid-area: pending-header;
+}
+
+.pending-table-header {
+    grid-area: pending-table-title;
+}
+
+.pending-table-header,
+.pending-table-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr 3fr;
+}
+
+.pending-table-header {
+    grid-template-rows: 1fr;
+    grid-template-areas:
+        "date hours notes"
+}
+
+.pending-table-body {
+    grid-template-rows: repeat(auto-fill, 1fr);
+}
+
+.pending-date-title,
+.pending-notes-value {
+    grid-column: 1;
+
+}
+
+.pending-hours-title,
+.pending-hours-value {
+    grid-column: 2;
+}
+
+.pending-notes-title,
+.pending-notes-value {
+    grid-column: 3;
+}
+

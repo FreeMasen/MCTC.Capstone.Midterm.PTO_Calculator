@@ -11,5 +11,18 @@
         <span class="balance-total" id="taken-hours-number">5</span>
         <span class="balance-title total" id="remaining-hours-title">Remaining Balance</span>
         <span class="balance-total total" id="remaining-hours-number">5</span>
+        <h1 class="pending-header">Pending Requests</h1>
+        <div class="pending-table-header">
+            <span class="pending-date-title">Date</span>
+            <span class="pending-hours-title">Hours</span>
+            <span class="pending-notes-title">Notes</span>
+        </div>
+        <div class="pending-table-body">
+            {%for i in range(2)%}
+            <span class="pending-date-value">12-11-2017</span>
+            <span class="pending-hours-value">8</span>
+            <span class="pending-notes-value">Beth's Birthday</span>
+            {%endfor%}
+        </div>
     </div>
 {%endblock%}
