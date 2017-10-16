@@ -1,7 +1,64 @@
 {%extends "layout.html"%}
 {% import "textbox.html" as input %}
 {%block content%}
+<link type="text/css" rel="stylesheet" src="static/css/new.css" />
+{% set currentDays = 1%}
+<header><h1>New Time Off Request</h1><button type="button" id="add-day-button">+</button></header>
 <form id="new-request">
-    {{input.textbox('Start Date', 'start-date' )}}
+    {{input.textbox('Date', 'date', 'date')}}
+    {{input.textbox('Hours', 'hours', 'hours')}}
 </form>
+<script>
+    let currentDays = 0;
+    window.addEventListener('load', () => {
+        let button = document.getElementById('add-day-button');
+        if (!button) return;
+        button.addEventListener('click', addRow);
+        let form = document.getElementById('new-request');
+        if (form.firstChild) return;
+        addRow();
+    });
+    function addRow(event) {
+        let form = document.getElementById('new-request');
+        if (!form) return console.error('no form exists to add a row to');
+        form.appendChild(row());
+    }
+
+    function row() {
+        currentDays++;
+        let container = document.createElement('div');
+        container.setAttribute('class', 'day-row');
+        let dateInput = textBox('Date');
+        let hoursInput = textBox('Hours');
+        container.appendChild(dateInput);
+        container.appendChild(hoursInput);
+        return container;
+    }
+
+    function textBox(labelText) {
+        let inputName = labelText.toLowerCase() + '-input-' + currentDays;
+        let container = document.createElement('div');
+        div.setAttribute('class', 'text-box-container');
+        let label = document.createElement('label');
+        label.setAttribute('class', 'text-box-label');
+        label.setAttribute('for', inputName);
+        label.appendChild(document.createTextNode(labelText));
+        let input = document.createElement('input');
+        input.setAttribute('class', 'text-box');
+        input.setAttribute('type', 'text');
+        input.setAttribute('name', inputName);
+        input.setAttribute('id', inputName);
+        let inactiveBar = document.createElement('hr');
+        inactiveBar.setAttribute('class', 'inactive-bar');
+        activeBar.setAttribute('class', 'active-bar');
+        container.appendChild(label);
+        container.appendChild(input);
+        container.appendChild(inactiveBar);
+        container.appendChild(activeBar);
+        return container;
+    }
+
+
+
+</script>
 {%endblock%}

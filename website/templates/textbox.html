@@ -1,4 +1,4 @@
-{% macro textbox(label_text, class_prefix='', value='', type='text') -%}
+{% macro textbox(label_text, name='', class_prefix='', value='', type='text') -%}
 {% set formatted_class = class_prefix.lower().replace(' ', '-') %}
 <div class="text-box-container">
     <label class="text-box-label" for={{name}}>{{label_text}}</label>
