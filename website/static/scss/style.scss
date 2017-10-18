@@ -63,13 +63,12 @@ button {
     }
 
     .active-bar {
-        border-color: rgb(83, 253, 83);
+        border-color: $primary;
         transform: scale(0);
     }
 
     .active {
         transform: scale(1);
-        transition: 1s linear
+        transition: 0.25s linear
     }
-    
 }

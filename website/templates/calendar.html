@@ -1,0 +1,23 @@
+{%macro calendar(title_text, days, pto=None) -%}
+<div class="calendar">
+    <h1>{{title_text}}</h1>
+    <div class="calendar-body">
+        {% for i in range(7)%}
+            <div class="day-header {{i | dow}}">{{i | dow}}</div>
+        {% endfor %}
+        {% for day in days %}
+        {% if day.day is none %}
+        <div class="empty-day {{day.dow | dow}}"></div>
+        {% else %}
+        <div class="day {{day.dow | dow}}">{{day.day}}</div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{%- endmacro %}
+<!--
+{% macro day(day_of_the_week, date=None) -%}
+{% set base_class = 'empty day' if date is none else ' day' %}
+    <div class={{(date | dow) + base_class}}></div>
+{%- endmacro %} -->
+

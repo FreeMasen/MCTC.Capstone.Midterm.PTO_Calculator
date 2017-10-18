@@ -1,6 +1,8 @@
 {%extends "layout.html"%}
+{% import "table_entry.html" as table %}
 {%block content %}
 <link type="text/css" rel="stylesheet" href="static/css/index.css" />
+<div class="home-page">
     <div class="balances">
         <h1 class="balance-header" id="earnings-header">Earnings</h1>
         <span class="balance-title" id="earned-hours-title">Earned Hours</span>
@@ -11,18 +13,53 @@
         <span class="balance-total" id="taken-hours-number">5</span>
         <span class="balance-title total" id="remaining-hours-title">Remaining Balance</span>
         <span class="balance-total total" id="remaining-hours-number">5</span>
+    </div>
+    <div class="pending-requests">
         <h1 class="pending-header">Pending Requests</h1>
-        <div class="pending-table-header">
-            <span class="pending-date-title">Date</span>
-            <span class="pending-hours-title">Hours</span>
-            <span class="pending-notes-title">Notes</span>
+            <div class="table-header">
+                <span class="pending-date-title">Date</span>
+                <span class="pending-hours-title">Hours</span>
+                <span class="pending-notes-title">Notes</span>
+                <span class="pending-requested-title">Date Requested</span>
+            </div>
+            <div class="table-body">
+                {% for pr in pending_requests %}
+                {{table.entry(pr)}}
+                {% endfor %}
+            </div>
         </div>
-        <div class="pending-table-body">
-            {%for i in range(2)%}
-            <span class="pending-date-value">12-11-2017</span>
-            <span class="pending-hours-value">8</span>
-            <span class="pending-notes-value">Beth's Birthday</span>
-            {%endfor%}
+        <div class="approved-requests">
+            <h1 class="approved-header">Approved Requests</h1>
+            <div class="approved table-header">
+                <span class="approved-date-title">Date</span>
+                <span class="approved-hours-title">Hours</span>
+                <span class="approved-notes-title">Notes</span>
+                <span class="approved-reqested-title">Date Requested</span>
+                <span class="approved-by-title">Approved By</span>
+                <span class="approved-date-title">Approved Date</span>
+            </div>
+            <div class="table-body">
+                {% for ar in approved_requests %}
+                {{table.entry(ar)}}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="complete-requests">
+            <h1 class="complete-header">Complete Requests</h1>
+            <div class="complete table-header">
+                <span class="complete-date-title">Date</span>
+                <span class="complete-hours-title">Hours</span>
+                <span class="complete-notes-title">Notes</span>
+                <span class="complete-reqested-title">Date Requested</span>
+                <span class="complete-by-title">Approved By</span>
+                <span class="complete-date-title">Approved Date</span>
+            </div>
+            <div class="table-body">
+                {% for cr in complete_requests %}
+                {{table.entry(cr)}}
+                {% endfor %}
+            </div>
         </div>
     </div>
-{%endblock%}
+</div>
+    {%endblock%}

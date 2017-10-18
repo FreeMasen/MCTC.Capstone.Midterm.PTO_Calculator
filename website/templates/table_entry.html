@@ -1,0 +1,28 @@
+{% macro entry(time_off_request) -%}
+<div class="table-entry">
+    <div class="dates-and-hours">
+        {% for day in time_off_request.days %}
+        <div class="time-off-date">
+            {{day.date}}
+        </div>
+        <div class="time-off-hour">
+            {{day.hours}}
+        </div>
+        {% endfor %}
+    </div>
+    <div class="request-note">
+        {{time_off_request.note}}
+    </div>
+    <div class="request-date">
+        {{time_off_request.date_requested}}
+    </div>
+    {% if time_off_request.approved %}
+    <div class="request-approver">
+        {{time_off_request.approved_by}}
+    </div>
+    <div class="request-approved-date">
+        {{time_off_request.approved_date}}
+    </div>
+    {% endif %}
+</div>
+{%- endmacro %}

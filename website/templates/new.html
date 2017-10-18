@@ -1,7 +1,11 @@
 {%extends "layout.html"%}
 {% import "textbox.html" as input %}
+{%import "calendar.html" as cal %}
 {%block content%}
+<link type="text/css" rel="stylesheet" href="static/css/new.css" />
+<link type="text/css" rel="stylesheet" href="static/css/calendar.css" />
 <form id="new-request">
-    {{input.textbox('Start Date', 'start-date' )}}
+    {{cal.calendar('October 2017', calendar)}}
 </form>
+<script type="text/javascript" src="static/js/index.js"></scrip>
 {%endblock%}

@@ -1,0 +1,28 @@
+@import 'colors';
+.calendar {
+    display: flex;
+    flex-flow: column;
+    .calendar-body {
+        text-align: center;
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        grid-gap: 5px;
+        padding: 5px;
+        .day-header {
+            padding: 5px 50px;
+            border-radius: 5px;
+            background: $accent;
+        }
+        .day,
+        .empty-day {
+            border-radius: 5px;
+            padding: 25px 50px;
+            background: $primary;
+            color: #fff;
+        }
+        .empty-day {
+            background: rgba(0, 0, 0, 0.5);
+        }
+    }
+
+}

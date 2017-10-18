@@ -1,0 +1,32 @@
+@import 'colors';
+.table-entry {
+    display: grid;
+    grid-auto-columns: 1fr;
+    padding-top: 5px;
+    + .table-entry {
+        border-top: 1px solid $primary;
+        padding-bottom: 5px;
+    }
+    .dates-and-hours {
+        grid-column: 1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-auto-rows: 1fr;
+    }
+
+    .request-note {
+        grid-column: 2;
+    }
+
+    .request-date {
+        grid-column: 3;
+    }
+
+    .request-approver {
+        grid-column: 4;
+    }
+
+    .request-approved-date {
+        grid-column: 5;
+    }
+}

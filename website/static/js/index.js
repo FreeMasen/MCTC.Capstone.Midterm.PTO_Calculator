@@ -1,19 +1,16 @@
-window.addEventListener('onload', () => {
-    console.log('window loaded');
+window.addEventListener('load', () => {
     registerTextBoxes();
 });
 
 function registerTextBoxes() {
-    console.log('registerTextBoxes')
-    let textBoxes = document.querySelectorAll('.text-box-input');
+    let textBoxes = document.querySelectorAll('input');
     for (var i = 0; i < textBoxes.length;i++) {
         textBoxes[i].addEventListener('focus', textBoxFocus);
-        textBoxes[i].addEventListener('blur', textBoxFocus);
+        textBoxes[i].addEventListener('blur', textBoxBlur);
     }
 }
 
 function textBoxFocus(event) {
-    console.log('textBoxFocus', element.currentTarget);
     let textbox = event.currentTarget;
     let activeBar = getActiveBar(textbox);
     if (!activeBar) return;
@@ -21,7 +18,6 @@ function textBoxFocus(event) {
 }
 
 function textBoxBlur(event) {
-    console.log('textBoxBlur', element.currentTarget);
     let textbox = event.currentTarget;
     let activeBar = getActiveBar(textbox);
     if (!activeBar) return;
@@ -29,8 +25,7 @@ function textBoxBlur(event) {
 }
 
 function getActiveBar(input) {
-    if (!textbox) return;
-    let textBoxContainer = textbox.parentElement;
+    let textBoxContainer = input.parentElement;
     if (!textBoxContainer) return;
     return textBoxContainer.querySelector('.active-bar');
 }
