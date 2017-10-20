@@ -5,7 +5,11 @@
 <link type="text/css" rel="stylesheet" href="static/css/new.css" />
 <link type="text/css" rel="stylesheet" href="static/css/calendar.css" />
 <form id="new-request">
-    {{cal.calendar('October 2017', calendar)}}
+    {{cal.calendar(calendar)}}
+    <input hidden value={{calendar.month_number}} id="month" />
+    <input hidden id="start-day" />
+    <input hidden id="end-day" />
 </form>
-<script type="text/javascript" src="static/js/index.js"></scrip>
+<script type="text/javascript" src="static/js/index.js"></script>
+<script type="text/javascript" src="static/js/calendarSelect.js"></script>
 {%endblock%}

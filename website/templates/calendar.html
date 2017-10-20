@@ -1,16 +1,20 @@
-{%macro calendar(title_text, days, pto=None) -%}
+{%macro calendar(calendar_view_model, pto=None) -%}
 <div class="calendar">
-    <h1>{{title_text}}</h1>
+    <div class="calendar-title">
+        <a class="button" href="/new?month={{calendar_view_model.last_month.number}}&year={{calendar_view_model.last_month.year}}">previous</a>
+        <h1>{{calendar_view_model.this_month.name}} {{calendar_view_model.this_month.year}}</h1>
+        <a class="button" href="/new?month={{calendar_view_model.next_month.number}}&year={{calendar_view_model.next_month.year}}">next</a>
+    </div>
     <div class="calendar-body">
         {% for i in range(7)%}
             <div class="day-header {{i | dow}}">{{i | dow}}</div>
         {% endfor %}
-        {% for day in days %}
-        {% if day.day is none %}
-        <div class="empty-day {{day.dow | dow}}"></div>
-        {% else %}
-        <div class="day {{day.dow | dow}}">{{day.day}}</div>
-        {% endif %}
+        {% for day in calendar_view_model.days %}
+            {% if day.day is none %}
+            <div class="empty-day {{day.dow | dow}}"></div>
+            {% else %}
+            <div class="day {{day.dow | dow}}">{{day.day}}</div>
+            {% endif %}
         {% endfor %}
     </div>
 </div>

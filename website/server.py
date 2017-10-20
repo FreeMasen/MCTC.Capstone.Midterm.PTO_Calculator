@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from data.models import RequestedTime, RequestDay
 from data.cal import Cal
+
 app = Flask(__name__, '/static', static_folder='static', template_folder='templates')
 app.debug = True
 app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -16,12 +17,14 @@ def index():
     approved_requests=approved_requests,\
     complete_requests=complete_requests)
 
-@app.route('/new', methods=['get', 'post'])
+@app.route('/new', methods=['get'])
 def new():
     '''A new request for time off'''
+    month = request.args.get('month')
+    year = request.args.get('year')
+    print('/new', month, year)
     if request.method == 'GET':
-        c = Cal.get_month(10,2017)
-        print('cal', c)
+        c = Cal.get_month(_safe_parse(month), _safe_parse(year))
         return render_template('new.html', calendar=c)
 @app.route('/admin', methods=['get'])
 def admin():
@@ -86,5 +89,13 @@ def dow(day_number):
         return 'fri'
     elif day_number ==6:
         return 'sat'
+def _safe_parse(text):
+    if text is None:
+        return None
+    try:
+        return int(text)
+    except ValueError:
+        return None
+
 if __name__ == '__main__':
     app.run(debug=True)
