@@ -2,7 +2,6 @@
 .calendar {
     display: flex;
     flex-flow: column;
-    padding: 10px;
     .calendar-title {
         width: 100%;
         display: flex;
@@ -19,6 +18,11 @@
             padding: 5px 50px;
             border-radius: 5px;
             background: $accent;
+        }
+        .day {
+            &.highlighted {
+                background-color: $accent;
+            }
         }
         .day,
         .empty-day {

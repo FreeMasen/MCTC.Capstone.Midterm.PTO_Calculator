@@ -1,9 +1,9 @@
 {%macro calendar(calendar_view_model, pto=None) -%}
 <div class="calendar">
     <div class="calendar-title">
-        <a class="button" href="/new?month={{calendar_view_model.last_month.number}}&year={{calendar_view_model.last_month.year}}">previous</a>
-        <h1>{{calendar_view_model.this_month.name}} {{calendar_view_model.this_month.year}}</h1>
-        <a class="button" href="/new?month={{calendar_view_model.next_month.number}}&year={{calendar_view_model.next_month.year}}">next</a>
+        <a id="last-month" class="button calendar-nav" href="#">{{calendar_view_model.last_month.name}}</a>
+        <h1 class="title-text">{{calendar_view_model.this_month.name}} {{calendar_view_model.this_month.year}}</h1>
+        <a id="next-month" class="button calendar-nav" href="#">{{calendar_view_model.next_month.name}}</a>
     </div>
     <div class="calendar-body">
         {% for i in range(7)%}
@@ -19,9 +19,3 @@
     </div>
 </div>
 {%- endmacro %}
-<!--
-{% macro day(day_of_the_week, date=None) -%}
-{% set base_class = 'empty day' if date is none else ' day' %}
-    <div class={{(date | dow) + base_class}}></div>
-{%- endmacro %} -->
-

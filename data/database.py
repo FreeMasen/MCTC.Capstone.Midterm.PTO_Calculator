@@ -1,31 +1,51 @@
 '''data access layer'''
-import sqlite3
-import datetime
-from sqlalchemy import Table, Column, MetaData,\
-create_engine, Integer, String, Boolean, DateTime,\
-Float, ForeignKey
+from datetime import date, timedelta, datetime
+from sqlalchemy import Table, Column, MetaData, create_engine
 from sqlalchemy.orm import mapper, sessionmaker, relationship
-from src.models import Employee, RequestedTime, EarnedTime, User, Role, UserRole
-
+from data.models import Employee, TimeOffRequest, Accrual, User, Base
+import bcrypt
 class Database():
     '''Database interface'''
     def __init__(self, conn_str='sqlite:///pto.sqlite'):
         self.engine = create_engine(conn_str)
-        self.metadata = MetaData(bind=self.engine)
-        self.earned_time = self._map_earned_time()
-        self.requested_time = self._map_requested_time()
-        self.employees = self._map_employee()
-        self.metadata.create_all()
+        Base.metadata.create_all(self.engine)
     def get_employees(self):
+        '''get full list of employees'''
+        try:
+            session = self._get_session()
+            return session.query(Employee).all()
+        except:
+            return list()
+    def get_employee(self, employee_id):
+        '''get a single employee'''
+        pass
+    def get_user(self, username):
+        '''get a single user'''
+        print('get_user', username)
+        try:
+            session = self._get_session()
+            users = session.query(User).filter(User.username == username).all()
+            print(users)
+            return users[0]
+        except Exception as e:
+            print(e)
+            return None
+    def get_requests(self, employee_id):
+        '''get a list of requests for this employee'''
+        pass
+    def get_timeoff(self, employee_id):
+        '''get a list of accrued time off for an employee'''
         pass
     def add_employee(self, employee):
         '''add a new employee'''
         try:
             session = self._get_session()
             session.add(employee)
+            session.add(employee.user)
             session.commit()
             return True
-        except:
+        except Exception as e:
+            print(e)
             return False
     def add_earned(self, earned_time):
         '''add hours earned'''
@@ -36,7 +56,7 @@ class Database():
             return True
         except:
             return False
-    def add_requested(self, request):
+    def add_request(self, request):
         '''add new request for pto'''
         try:
             session = self._get_session()
@@ -48,48 +68,20 @@ class Database():
     def _get_session(self):
         session = sessionmaker(bind=self.engine)
         return session()
-    def _map_employee(self):
-        t = Table('employees', self.metadata,\
-        Column('id', Integer, primary_key=True),\
-        Column('first_name', String),\
-        Column('last_name', String),\
-        Column('hire_date', DateTime),\
-        Column('pto_earned', Float))
-        mapper(Employee, t, properties={
-            'earned_time': relationship(EarnedTime,backref='employees'),
-            'requested_time': relationship(RequestedTime, backref='employees')
-        })
-        return t
-    def _map_earned_time(self):
-        t = Table('earned_time', self.metadata,\
-        Column('id', Integer, primary_key=True),\
-        Column('employee_id', Integer, ForeignKey('employees.id')),\
-        Column('pay_date', DateTime),\
-        Column('hours', Float))
-        mapper(EarnedTime,t)
-        return t
-    def _map_requested_time(self):
-        t = Table('requested_time', self.metadata,\
-        Column('id', Integer, primary_key=True),\
-        Column('employee_id', Integer, ForeignKey('employees.id')),\
-        Column('hours', Float),\
-        Column('hours', Float))
-        mapper(RequestedTime, t)
-        return t
-    def _map_user(self):
-        t = Table('users', self.metadata,\
-        Column('id', Integer, primary_key=True),\
-        Column('username', String),\
-        Column('password_hash', String))
-        mapper(User, t)
-    def _map_roles(self):
-        t = Table('roles', self.metadata,\
-        Column('id', Integer, primary_key=True,\
-        Column('name', String)))
-        mapper(Role, t)
-        return t
-    def _map_user_roles(self):
-        t = Table('user_roles', self.metadata,\
-        Column('user_id', Integer),\
-        Column('role_id', Integer))
-        mapper(UserRole, t)
+
+if __name__ == '__main__':
+    d = Database()
+    employees = d.get_employees()
+    new_years = datetime(year=2017,day=1,month=1)
+    accruals = list()
+    for i in range(27):
+        pay_date = new_years + timedelta(days=14 * i)
+        if pay_date.year != new_years.year:
+            continue
+        if pay_date > datetime.today():
+            break
+        for emp in employees:
+            if pay_date > emp.hire_date:
+                accruals.append(Accrual(pay_date=pay_date,hours=15.3, employee_id=emp.employee_id))
+    for a in accruals:
+        d.add_earned(a)

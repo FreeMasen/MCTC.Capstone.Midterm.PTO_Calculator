@@ -4,12 +4,13 @@
 {%block content%}
 <link type="text/css" rel="stylesheet" href="static/css/new.css" />
 <link type="text/css" rel="stylesheet" href="static/css/calendar.css" />
-<form id="new-request">
+<form id="new-request" action="/hours" method="post">
     {{cal.calendar(calendar)}}
-    <input hidden value={{calendar.month_number}} id="month" />
-    <input hidden id="start-day" />
-    <input hidden id="end-day" />
+    <button class="next-button" type="submit">Next</button>
+    <input type="hidden" value={{calendar.month_number}} id="month" />
+    <input type="hidden" value={{calendar.year_number}} id="year" />
+    <input type="hidden" value={{start_date}} class="day-selection" name="start-day" id="start-day" />
+    <input type="hidden" value={{end_date}} class="day-selection" name="end-day" id="end-day" />
 </form>
-<script type="text/javascript" src="static/js/index.js"></script>
 <script type="text/javascript" src="static/js/calendarSelect.js"></script>
 {%endblock%}

@@ -1,0 +1,21 @@
+#new-request {
+    margin: 5px;
+    display: grid;
+    grid-gap: 5px;
+    grid-template-rows: 4fr 1fr;
+    grid-template-columns: 4fr 0.25fr;
+    grid-template-areas:
+        "calendar calendar"
+        "calendar calendar"
+        "calendar calendar"
+        "calendar calendar"
+        "empty button";
+    margin: 5px 10px;
+    .calendar {
+        grid-area: calendar;
+    }
+    .next-button {
+        grid-area: button;
+    }
+
+}

@@ -1,60 +1,81 @@
 '''POPO Models'''
-class Employee(object):
+import datetime
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Float, Boolean, Enum
+from sqlalchemy.orm import relationship
+import sqlalchemy.types as types
+Base = declarative_base()
+
+class Employee(Base):
     '''Someone who works here'''
-    def __init__(self, first_name, last_name, hire_date):
-        self.employee_id = None
-        self.first_name = first_name
-        self.last_name = last_name
-        self.hire_date = hire_date
-        self.pto_earned = 0
-        self.time_earned = list()
-        self.time_requested = list()
+    __tablename__ = 'employee'
+    employee_id = Column(Integer, primary_key=True)
+    first_name = Column(String)
+    last_name = Column(String)
+    hire_date = Column(DateTime)
+    time_earned = relationship('Accrual')
+    time_requested = relationship('TimeOffRequest')
+    user = relationship('User', uselist=False, back_populates='employee')
 
-class EarnedTime(object):
+class Accrual(Base):
     '''Earned Paid Time Off'''
-    def __init__(self, pay_date, hours, employee_id, earned_id=None):
-        self.pay_date = pay_date
-        self.hours = hours
-        self.employee_id = employee_id
-        self.earned_id = earned_id
+    __tablename__ = 'Accrual'
+    accrual_id = Column(Integer, primary_key=True)
+    pay_date = Column(DateTime)
+    hours = Column(Float)
+    employee_id = Column(Integer, ForeignKey('employee.employee_id'))
 
-class RequestedTime(object):
-    '''Time off requested'''
-    def __init__(self, date_requested, employee_id, note, days):
-        self.time_off_id = id
-        self.date_requested = date_requested
-        self.employee_id = employee_id
-        self.consumed = False
-        self.note = note
-        self.days = days
-        self.approved = False
-        self.approved_by = None
-        self.approved_date = None
+class TimeOffRequest(Base):
+    '''a single request for time off'''
+    __tablename__ = 'request'
+    request_id = Column(Integer, primary_key=True)
+    date_requested = Column(DateTime, default=datetime.date.today())
+    note = Column(String)
+    approved = Column(Boolean, default=False)
+    approved_by = Column(String)
+    approved_date = Column(DateTime)
+    days = relationship('RequestDay')
+    employee_id = Column(Integer, ForeignKey('employee.employee_id'))
 
-class RequestDay(object):
+class RequestDay(Base):
     '''A single day in a PTO request'''
-    def __init__(self, date, hours, day_id=None):
-        self.day_id = day_id
-        self.date = date
-        self.hours = hours
+    __tablename__ = 'day';
+    day_id = Column(Integer, primary_key=True)
+    date = Column(DateTime)
+    hours = Column(Float)
+    request_id = Column(Integer, ForeignKey('request.request_id'))
 
-class User(object):
+class Roles(types.TypeDecorator):
+    '''a user's list of roles'''
+    impl = types.Integer
+    def process_bind_param(self, value, dialect):
+        ret = 0
+        if value is None:
+            return ret
+        for role in value:
+            if role == 'user':
+                ret += 1
+            if role == 'approver':
+                ret += 2
+            if role == 'admin':
+                ret += 4
+        return ret
+    def process_result_value(self, value, dialect):
+        ret = list()
+        if value & 1 > 0:
+            ret.append('user')
+        if value & 2 > 0:
+            ret.append('approver')
+        if value & 4 > 0:
+            ret.append('adimg')
+        return ret
+
+class User(Base):
     '''A user, can be joined with an employee'''
-    def __init__(self, username, password_hash=None, roles=None, user_id=None, employee_id=None):
-        self.username = username
-        self.password_hash = password_hash
-        self.roles = roles
-        self.user_id = user_id
-        self.employee_id = employee_id
-
-class Role(object):
-    '''Access definitions'''
-    def __init__(self, name, role_id=None):
-        self.name = name
-        self.role_id = role_id
-
-class UserRoles(object):
-    '''Join table of user's in a role'''
-    def __init__(self, user_id, role_id):
-        self.user_id = user_id
-        self.role_id = role_id
+    __tablename__ = 'user'
+    user_id = Column(Integer, primary_key=True)
+    username = Column(String)
+    password_hash = Column(String)
+    employee_id = Column(Integer, ForeignKey('employee.employee_id'))
+    employee = relationship('Employee', back_populates='user')
+    roles = Column(Roles)
