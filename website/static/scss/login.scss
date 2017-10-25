@@ -1,0 +1,18 @@
+@import 'colors';
+
+.login-page {
+    display: grid;
+    grid-template-rows: 1fr 0.5fr 3fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-areas:
+        "upper-buffer   upper-buffer    upper-buffer"
+        "left-buffer    header          right-buffer"
+        "left-buffer    form            right-buffer"
+        "lower-buffer   lower-buffer    lower-buffer";
+    h1 {
+        grid-area: header;
+    }
+    #login {
+        grid-area: form;
+    }
+}

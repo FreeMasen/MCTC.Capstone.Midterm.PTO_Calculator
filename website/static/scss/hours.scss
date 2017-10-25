@@ -1,0 +1,57 @@
+@import 'colors';
+.hours-form {
+    display: flex;
+    flex-flow: column;
+    margin: 25px auto;
+    width: 500px;
+    max-width: 50%;
+    .days {
+        display: flex;
+        flex-flow: row;
+        flex-wrap: wrap;
+        .day {
+            display: flex;
+            flex-basis: 50%;
+            flex-flow: column;
+            span {
+                width: 100%;
+                text-align: center;
+                margin-top: 5px;
+                font-size: 14pt;
+            }
+            input {
+                width: 25px;
+                border: 0;
+                border-bottom: 1px solid $primary;
+                font-size: 14pt;
+                text-align: center;
+                margin: auto;
+                -moz-appearance: textfield;
+            }
+        }
+    }
+
+    .note-title {
+        margin-top: 10px;
+        font-size: 14pt;
+    }
+
+    .hours-buttons {
+        margin-top: 10px;
+        display: flex;
+        flex-flow: row;
+        justify-content: space-between;
+        * {
+            flex-basis: 40%;
+        }
+        .hours-cancel-button {
+            background: $alert;
+            &:hover {
+                background: darken($alert, 10%);
+            }
+            &:focus {
+                filter: hue-rotate(-45deg)
+            }
+        }
+    }
+}
