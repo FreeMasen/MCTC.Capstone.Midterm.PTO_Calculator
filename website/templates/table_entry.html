@@ -3,7 +3,7 @@
     <div class="dates-and-hours">
         {% for day in time_off_request.days %}
         <div class="time-off-date">
-            {{day.date}}
+            {{day.date|date_string}}
         </div>
         <div class="time-off-hour">
             {{day.hours}}
@@ -14,14 +14,14 @@
         {{time_off_request.note}}
     </div>
     <div class="request-date">
-        {{time_off_request.date_requested}}
+        {{time_off_request.date_requested|date_string}}
     </div>
     {% if time_off_request.approved %}
     <div class="request-approver">
         {{time_off_request.approved_by}}
     </div>
     <div class="request-approved-date">
-        {{time_off_request.approved_date}}
+        {{time_off_request.approved_date|date_string}}
     </div>
     {% endif %}
 </div>

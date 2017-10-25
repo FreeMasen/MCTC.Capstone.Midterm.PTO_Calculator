@@ -8,7 +8,10 @@ nav {
     box-shadow:  1px 1px 1px 1px $neutral;
     padding: 5px;
     grid-gap: 5px;
-    background: #508FF4;
+    background: $primary;
+    img {
+        color: $primary;
+    }
 }
 
 .banner-image {
