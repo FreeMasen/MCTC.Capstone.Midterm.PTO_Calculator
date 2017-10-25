@@ -1,13 +1,20 @@
 {%extends "layout.html"%}
 {%block content%}
-<link rel="stylesheet" type="text/css" href="static/hours.css" />
-<form class="hours-form" action="/addHours" method="post">
-    {% for day in dates %}
-    <div class="day">
-        <span class="date">{{day.date_string}}</span>
-        <input type="number" class="hours" {{day.hours}} />
+<link rel="stylesheet" type="text/css" href="static/css/hours.css" />
+<form class="hours-form" action="/submitRequest" method="post">
+    <div class="days">
+        {% for day in dates %}
+        <div class="day">
+            <span class="date">{{day.date_string}}</span>
+            <input type="number" min="0" max="8" class="hours" value="8" name="{{day.date_string}}" {{day.hours}} />
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-    <button class="hours-submit-button" type="submit">Submit</button>
+    <span class="note-title">Note</span>
+    <textarea name="note"></textarea>
+    <div class="hours-buttons">
+        <button class="hours-cancel-button" type="button">Cancel</button>
+        <button class="hours-submit-button" type="submit">Submit</button>
+    </div>
 </form>
 {%endblock%}
