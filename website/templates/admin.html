@@ -1,0 +1,74 @@
+{%extends "layout.html"%}
+{%block content%}
+    <link type="text/css" rel="stylesheet" href="static/css/admin.css" />
+    <div class="admin">
+        <form class="add-user" action="/addUser" method="post">
+            <h1>Add User</h1>
+            <div class="input" id="first-name-container">
+                <label for="first-name">First Name</label>
+                <input id="first-name" name="first-name" type="text" />
+            </div>
+            <div class="input" id="last-name-container">
+                <label for="last-name">Last Name</label>
+                <input id="last-name" name="last-name" type="text" />
+            </div>
+            <div class="input" id="hire-date-container">
+                <label for="hire-date">Hire Date</label>
+                <input id="hire-date" name="hire-date" type="date" />
+            </div>
+            <div class="input" id="hours-container">
+                    <label for="hours">Hours Per Pay Period</label>
+                    <input id="hours" name="hours" type="number" min="0" />
+                </div>
+            <div class="input" id="username-container">
+                <label for="username">Username</label>
+                <input id="username" name="username" type="text" />
+            </div>
+            <div class="input" id="password-container">
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password" />
+            </div>
+            <div class="radio-group" id="roles-group">
+                <div class="input">
+                    <label for="user-role">User</label>
+                    <input id="user-role" name="role" type="checkbox" checked="true" />
+                </div>
+                <div class="input">
+                    <label for="approver-role">Approver</label>
+                    <input id="approver-role" name="role" type="checkbox" />
+                </div>
+                <div class="input">
+                    <label for="admin-role">Admin</label>
+                    <input id="admin-role" name="role" type="checkbox" />
+                </div>
+            </div>
+            <button id="cancel" type="button">Cancel</button>
+            <button id="submit" type="submit">Submit</button>
+        </form>
+        <form class="edit-user" action="/deleteUser" method="post">
+            <h1>Current Users</h1>
+            <div id="current-user-header">
+                <span class="delete">delete</span>
+                <span class="current-first-name">First Name</span>
+                <span class="current-last-name">Last Name</span>
+                <span class="current-hire-date">Hire Date</span>
+            </div>
+            <div id="current-user-body">
+                {% for emp in employees %}
+                <div class="delete">
+                    <input type="checkbox" name="delete-user"  />
+                </div>
+                <span class="current-first-name">{{emp.first_name}}</span>
+                <span class="current-last-name">{{emp.last_name}}</span>
+                <span class="current-hire-date">{{emp.hire_date | date_string}}</span>
+                <input type="hidden" name="emp-id" value={{emp.employee_id}} />
+                {% endfor %}
+            </div>
+            <div class="buttons">
+                <button type="button" id="clear">Clear</button>
+                <button type="submit" id="delete">Delete</button>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript" src="static/js/admin.js"></script>
+{%endblock%}

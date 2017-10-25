@@ -75,6 +75,18 @@ class Database():
             return True
         except:
             return False
+    def delete_users(self, employee_ids):
+        try:
+            session = self._get_session()
+            users = session.query(User)\
+            .filter(User.employee_id in employee_ids)\
+            .all()
+            for user in users:
+                session.delete(User, User.user_id == user.user_id)
+                session.delete(Employee, Employee.employee_id == user.employee_id)
+            session.commit()
+        except:
+            return False
     def _get_session(self):
         session = sessionmaker(bind=self.engine)
         return session()

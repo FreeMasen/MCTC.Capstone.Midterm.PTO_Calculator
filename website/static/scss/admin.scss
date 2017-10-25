@@ -1,0 +1,125 @@
+@import 'colors';
+.admin {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-around;
+    .add-user {
+        flex-basis: 45%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr repeat(3 0.5fr) 1fr 0.5fr;
+        grid-template-areas:
+            "title title"
+            "first last"
+            "hire blank"
+            "username password"
+            "radio radio"
+            "cancel submit";
+        grid-gap: 10px;
+        h1 {
+            grid-area: title;
+        }
+        .input {
+            display: flex;
+            flex-flow: column;
+        }
+        #first-name-container {
+            grid-area: first;
+        }
+        #last-name-container {
+            grid-area: last;
+        }
+        #hire-date-container {
+            grid-area: hire;
+        }
+        #username-container {
+            grid-area: username;
+        }
+        #password-container {
+            grid-area: password;
+        }
+        #roles-group {
+            grid-area: radio;
+        }
+        #cancel {
+            grid-area: cancel;
+            background: $alert;
+            &:hover {
+                background-color: darken($alert, 10);
+            }
+            &:active {
+                filter: hue-rotate(-45deg);
+            }
+        }
+        #submit {
+            grid-area: submit;
+        }
+        .radio-group {
+            grid-column: 2;
+            margin-top: 5px;
+            .input {
+                flex-flow: row;
+                * {
+                    flex-basis: 50%;
+                }
+                + * {
+                    margin-top: 10px;
+                }
+            }
+        }
+    }
+    .edit-user {
+        grid-template-rows: 0.5fr 4fr 0.5fr;
+        flex-basis: 45%;
+        #current-user-header,
+        #current-user-body {
+            display: grid;
+            grid-gap: 1px;
+            grid-template-columns: 0.25fr 0.5fr 0.5fr 0.5fr;
+            .delete {
+                grid-column: 1;
+            }
+            .current-first-name {
+                grid-column: 2;
+            }
+            .current-last-name {
+                grid-column: 3;
+            }
+            .current-hire-date {
+                grid-column: 4;
+            }
+        }
+        #current-user-header {
+            padding: 5px;
+            background: $primary;
+            border-radius: 5px 5px 0 0;
+            color: white;
+        }
+        #current-user-body {
+            background: $accent;
+            border-radius: 0 0 5px 5px;
+            * {
+                padding: 5px 0;
+                border-top: 1px solid $primary;
+            }
+        }
+        .buttons {
+            display: flex;
+            flex-flow: row;
+            justify-content: space-around;
+            margin-top: 10px;
+            * {
+                flex-basis: 45%;
+            }
+            #clear {
+                background: $alert;
+                &:hover {
+                    background-color: darken($alert, 10);
+                }
+                &:active {
+                    filter: hue-rotate(-45deg);
+                }
+            }
+        }
+    }
+}

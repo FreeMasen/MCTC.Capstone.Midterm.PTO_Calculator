@@ -2,25 +2,30 @@ import time
 from datetime import datetime
 from functools import reduce
 from flask import Flask, render_template, request, jsonify, redirect, session
-from data.models import TimeOffRequest, RequestDay, User
+from data.models import TimeOffRequest, RequestDay, User, Employee
 from data.cal import Cal
 from data.database import Database
+import bcrypt
+
 DB = Database()
 
 app = Flask(__name__, '/static', static_folder='static', template_folder='templates')
 app.secret_key = 'war on tugs'
 app.debug = True
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+
 @app.context_processor
 def inject_user():
     if check_for_user():
         return dict(signed_in=True)
     return dict(signed_in=False)
+
 @app.route('/sign_out')
 def signout():
     del session['username']
     del session['expiration']
     return render_template('login.html')
+
 @app.route('/', methods=['get'])
 def index():
     '''main page for the application'''
@@ -51,6 +56,7 @@ def index():
         hours_remaining='{v:10.2f}'.format(v=hours_remaining))
     else:
         return redirect('/login')
+
 @app.route('/login', methods=['get', 'post'])
 def login():
     print('login')
@@ -69,6 +75,7 @@ def login():
             session['username'] = username
             session['expiration'] = time.time() + (30 * 60)
             return redirect('/')
+
 @app.route('/new', methods=['get'])
 def new():
     '''A new request for time off'''
@@ -79,6 +86,7 @@ def new():
     print('/calendar', month, year)
     c = Cal.get_month(_safe_parse(month), _safe_parse(year))
     return render_template('new.html', calendar=c)
+
 @app.route('/calendar', methods=['get'])
 def calendar():
     print('/calendar')
@@ -88,6 +96,7 @@ def calendar():
     year = request.args.get('year')
     c = Cal.get_month(_safe_parse(month), _safe_parse(year))
     return jsonify(c.to_dict())
+
 @app.route('/hours', methods=['post'])
 def hours():
     if not check_for_user():
@@ -100,6 +109,7 @@ def hours():
     except Exception as e:
         print('error', e)
         return redirect('/new')
+
 @app.route('/submitRequest', methods=['get','post'])
 def submit_request():
     if not check_for_user():
@@ -122,8 +132,31 @@ def admin():
     '''For system admins only'''
     if not check_for_user():
         return redirect('/login')
-    if request.method == 'GET':
-        return render_template('admin.html')
+    employees = DB.get_employees()
+    return render_template('admin.html', employees=employees)
+
+@app.route('/addUser', methods=['post'])
+def add_user():
+    '''Add a new user/employee'''
+    first_name = request.form.get('first-name')
+    last_name = request.form.get('last-name')
+    hire_date = request.form.get('hire-date')
+    username = request.form.get('username')
+    password = request.form.get('password')
+    roles = request.form.getlist('role')
+    password_hash = bcrypt.hashpw(password, bcrypt.gensalt(15))
+    user = User(username=username, password_hash=password_hash,roles=roles)
+    employee = Employee(first_name=first_name, last_name=last_name,\
+    hire_date=hire_date, user=user)
+    DB.add_employee(employee)
+    return redirect('/admin')
+
+@app.route('/deleteUser', methods=['post'])
+def del_user():
+    print('deleteUser')
+    employee_ids = request.form.getlist('emp-id')
+    DB.delete_users(employee_ids)
+    return redirect('/admin')
 @app.route('/approve', methods=['get'])
 def approve():
     '''for employee admins only'''
@@ -131,10 +164,12 @@ def approve():
         return redirect('/login')
     if request.method == 'GET':
         return render_template('approve.html')
+
 @app.template_filter('date_string')
 def date_string(date_time):
     return '{m}-{d}-{y}'.format(m=date_time.month,\
     d=date_time.day, y=date_time.year)
+
 @app.template_filter('dow')
 def dow(day_number):
     if day_number == 0:
@@ -151,8 +186,10 @@ def dow(day_number):
         return 'fri'
     elif day_number ==6:
         return 'sat'
+
 def get_user():
     return DB.get_user(session['username'])
+
 def _safe_parse(text):
     if text is None:
         return None
@@ -176,5 +213,6 @@ def check_for_user():
     except Exception as e:
         return False
     return True
+
 if __name__ == '__main__':
     app.run(debug=True)
