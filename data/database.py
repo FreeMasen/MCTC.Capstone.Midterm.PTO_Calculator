@@ -13,7 +13,7 @@ class Database():
         '''get full list of employees'''
         try:
             session = self._get_session()
-            return session.query(Employee).all()
+            return session.query(Employee).join(User, Employee.employee_id == User.employee_id).all()
         except:
             return list()
     def get_employee(self, employee_id):
@@ -77,33 +77,35 @@ class Database():
             return False
     def delete_users(self, employee_ids):
         try:
+            print('delete_users', employee_ids)
             session = self._get_session()
-            users = session.query(User)\
-            .filter(User.employee_id in employee_ids)\
-            .all()
-            for user in users:
-                session.delete(User, User.user_id == user.user_id)
-                session.delete(Employee, Employee.employee_id == user.employee_id)
+            for eid in employee_ids:
+                session.query(User).filter(User.employee_id == eid).delete()
+                session.query(Employee).filter(Employee.employee_id == eid).delete()
             session.commit()
-        except:
+        except Exception as e:
+            print(e)
             return False
+    def update_user_roles(self, changes):
+        print('database->update_user_roles', changes)
+        try:
+            session = self._get_session()
+            for change in changes:
+                query = session.query(User).filter(User.employee_id == change['empId'])
+                if change['checked']:
+                    query.update({User.roles: User.roles + change['role']})
+                else:
+                    list(filter(lambda r: r != change['role'], User.roles))
+                    query.update({User.roles: list(filter(lambda r: r != change['role'], User.roles))})
+            session.commit()
+            print('update_user_roles complete')
+        except Exception as e:
+            print('update_user_roles error', e)
+
     def _get_session(self):
         session = sessionmaker(bind=self.engine)
         return session()
 
 if __name__ == '__main__':
-    d = Database()
-    employees = d.get_employees()
-    new_years = datetime(year=2017,day=1,month=1)
-    accruals = list()
-    for i in range(27):
-        pay_date = new_years + timedelta(days=14 * i)
-        if pay_date.year != new_years.year:
-            continue
-        if pay_date > datetime.today():
-            break
-        for emp in employees:
-            if pay_date > emp.hire_date:
-                accruals.append(Accrual(pay_date=pay_date,hours=15.3, employee_id=emp.employee_id))
-    for a in accruals:
-        d.add_earned(a)
+    pass
+

@@ -34,6 +34,7 @@ gulp.task('scss', () => {
 });
 
 gulp.task('watch', () => {
+    
     gulp.watch(['website/static/scss/*.scss'], ['scss'])
     gulp.watch(['website/**/*.html',
                 'website/**/*.js',

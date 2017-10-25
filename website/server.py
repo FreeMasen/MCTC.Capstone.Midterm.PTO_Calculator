@@ -1,6 +1,7 @@
 import time
 from datetime import datetime
 from functools import reduce
+import json
 from flask import Flask, render_template, request, jsonify, redirect, session
 from data.models import TimeOffRequest, RequestDay, User, Employee
 from data.cal import Cal
@@ -140,7 +141,8 @@ def add_user():
     '''Add a new user/employee'''
     first_name = request.form.get('first-name')
     last_name = request.form.get('last-name')
-    hire_date = request.form.get('hire-date')
+    hire_date_text = request.form.get('hire-date')
+    hire_date = Cal.parse_iso_date(hire_date_text)
     username = request.form.get('username')
     password = request.form.get('password')
     roles = request.form.getlist('role')
@@ -151,11 +153,15 @@ def add_user():
     DB.add_employee(employee)
     return redirect('/admin')
 
-@app.route('/deleteUser', methods=['post'])
+@app.route('/saveUsers', methods=['post'])
 def del_user():
-    print('deleteUser')
-    employee_ids = request.form.getlist('emp-id')
-    DB.delete_users(employee_ids)
+    print('saveUsers')
+    delete_ids = request.form.getlist('delete-user')
+    DB.delete_users(delete_ids)
+    role_changes_text = request.form.get('employee-changes')
+    if len(role_changes_text) > 0:
+        role_changes = json.loads(role_changes_text)
+        DB.update_user_roles(role_changes)
     return redirect('/admin')
 @app.route('/approve', methods=['get'])
 def approve():
@@ -186,7 +192,14 @@ def dow(day_number):
         return 'fri'
     elif day_number ==6:
         return 'sat'
-
+@app.template_filter('checked')
+def checked(info):
+    try:
+        if info[0] in info[1]:
+            return 'checked'
+    except:
+        pass
+    return ''
 def get_user():
     return DB.get_user(session['username'])
 
@@ -198,7 +211,7 @@ def _safe_parse(text):
     except ValueError:
         return None
 
-def check_for_user():
+def check_for_user(role="user"):
     try:
         session_username = session['username']
         #will throw a ValueError if not a number
@@ -210,6 +223,8 @@ def check_for_user():
             del session['username']
             del session['expiration']
             return False
+        user = DB.get_user(session_username)
+        return role in user.roles
     except Exception as e:
         return False
     return True

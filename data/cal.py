@@ -60,6 +60,9 @@ class Cal():
         '''Get a date from a datetime string (1-1-1970)'''
         date_arr = list(map(int, date_string.split('-')))
         return datetime(year=date_arr[2], month=date_arr[0], day=date_arr[1])
+    def parse_iso_date(date_string):
+        date_arr = list(map(int, date_string.split('-')))
+        return datetime(year=date_arr[0], month=date_arr[1], day=date_arr[2])
     def date_strting(date_time):
         return '{m}-{d}-{y}'.format(m=date_time.month,\
         d=date_time.day, y=date_time.year)

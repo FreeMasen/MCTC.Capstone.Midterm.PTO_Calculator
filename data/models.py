@@ -15,7 +15,7 @@ class Employee(Base):
     hire_date = Column(DateTime)
     time_earned = relationship('Accrual', uselist=True)
     time_requested = relationship('TimeOffRequest', uselist=True)
-    user = relationship('User', uselist=False, back_populates='employee')
+    user = relationship('User', uselist=False, back_populates='employee', lazy='joined')
 
 class Accrual(Base):
     '''Earned Paid Time Off'''
@@ -67,7 +67,7 @@ class Roles(types.TypeDecorator):
         if value & 2 > 0:
             ret.append('approver')
         if value & 4 > 0:
-            ret.append('adimg')
+            ret.append('admin')
         return ret
 
 class User(Base):
