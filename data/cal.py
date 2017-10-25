@@ -46,10 +46,8 @@ class Cal():
         last_month=last_month, year_number=year, month_number=month)
     def get_days_betwen(start, end):
         '''get day object between two dates passed in as text 01-01-1970'''
-        start_arr = list(map(int, start.split('-')))
-        end_arr = list(map(int, end.split('-')))
-        start_date = datetime(year=start_arr[2], month=start_arr[0], day=start_arr[1])
-        end_date = datetime(year=end_arr[2], month=end_arr[0], day=end_arr[1])
+        start_date = Cal.parse_date(start)
+        end_date = Cal.parse_date(end)
         delta = end_date - start_date
         ret = list()
         for i in range(delta.days + 1):
@@ -58,6 +56,13 @@ class Cal():
             date_string = '{m}-{d}-{y}'.format(m=day.month, d=day.day, y=day.year)
             ret.append(Day(dow, day.day, date_string))
         return ret
+    def parse_date(date_string):
+        '''Get a date from a datetime string (1-1-1970)'''
+        date_arr = list(map(int, date_string.split('-')))
+        return datetime(year=date_arr[2], month=date_arr[0], day=date_arr[1])
+    def date_strting(date_time):
+        return '{m}-{d}-{y}'.format(m=date_time.month,\
+        d=date_time.day, y=date_time.year)
     def _get_month_name(month):
         return MONTHS[month - 1]
     def _get_dow(dow):

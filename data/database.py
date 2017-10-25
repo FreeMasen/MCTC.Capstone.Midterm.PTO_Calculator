@@ -56,11 +56,21 @@ class Database():
             return True
         except:
             return False
-    def add_request(self, request):
+    def add_request(self, user):
         '''add new request for pto'''
         try:
             session = self._get_session()
-            session.add(request)
+            session.update(user)
+            session.update(user.employee)
+            session.update(user.employee.time_requested)
+            session.commit()
+            return True
+        except:
+            return False
+    def add_requests(self, requests):
+        try:
+            session = self._get_session()
+            session.add(requests)
             session.commit()
             return True
         except:

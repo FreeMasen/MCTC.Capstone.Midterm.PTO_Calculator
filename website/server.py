@@ -6,25 +6,21 @@ from data.models import TimeOffRequest, RequestDay, User
 from data.cal import Cal
 from data.database import Database
 DB = Database()
-def check_for_user():
-    try:
-        session_username = session['username']
-        #will throw a ValueError if not a number
-        expiration = float(session['expiration'])
-        #get the current time in seconds
-        current = time.time()
-        #if the login has expired
-        if current > expiration:
-            del session['username']
-            del session['expiration']
-            return False
-    except Exception as e:
-        return False
-    return True
+
 app = Flask(__name__, '/static', static_folder='static', template_folder='templates')
 app.secret_key = 'war on tugs'
 app.debug = True
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+@app.context_processor
+def inject_user():
+    if check_for_user():
+        return dict(signed_in=True)
+    return dict(signed_in=False)
+@app.route('/sign_out')
+def signout():
+    del session['username']
+    del session['expiration']
+    return render_template('login.html')
 @app.route('/', methods=['get'])
 def index():
     '''main page for the application'''
@@ -38,14 +34,11 @@ def index():
         hours_requested = 0
         hours_taken = 0
         for r in user.employee.time_requested:
-            if r.days[len(r.days) - 1].date > datetime.today():
+            if r.days[len(r.days) - 1].date < datetime.today():
                 hours_taken = reduce(lambda l, r: l + r.hours, r.days, hours_taken)
                 complete_requests.append(r)
-            elif r.approved:
-                hours_requested = reduce(lambda l, r: l + r.hours, r.days, hours_taken)
-                approved_requests.append(r)
             else:
-                hours_requested = reduce(lambda l, r: l + r.hours, r.days, hours_taken)
+                hours_requested = reduce(lambda l, r: l + r.hours, r.days, hours_requested)
                 pending_requests.append(r)
         hours_remaining = hours_earned - (hours_requested + hours_taken)
         return render_template('index.html',\
@@ -61,27 +54,26 @@ def index():
 @app.route('/login', methods=['get', 'post'])
 def login():
     print('login')
-    if request.method == 'GET':
-        print('get')
-        return render_template('login.html')
-    else:
-        print('post', request.form)
-        username = request.form.get('username')
-        print('username', username)
-        if username is None:
-            return render_template('login.html', message="error loging in")
-        user = DB.get_user(username)
-        print('user', user)
-        if user is None:
-            return render_template('login.html', message="error loging in")
-
-        session['username'] = username
-        session['expiration'] = time.time() + (30 * 60)
-        print('sending to /')
+    if check_for_user():
         return redirect('/')
+    else:
+        if request.method == 'GET':
+            return render_template('login.html')
+        else:
+            username = request.form.get('username')
+            if username is None:
+                return render_template('login.html', message="error loging in")
+            user = DB.get_user(username)
+            if user is None:
+                return render_template('login.html', message="error loging in")
+            session['username'] = username
+            session['expiration'] = time.time() + (30 * 60)
+            return redirect('/')
 @app.route('/new', methods=['get'])
 def new():
     '''A new request for time off'''
+    if not check_for_user():
+        return redirect('/login')
     month = request.args.get('month')
     year = request.args.get('year')
     print('/calendar', month, year)
@@ -90,13 +82,16 @@ def new():
 @app.route('/calendar', methods=['get'])
 def calendar():
     print('/calendar')
+    if not check_for_user():
+        return redirect('/login')
     month = request.args.get('month')
     year = request.args.get('year')
     c = Cal.get_month(_safe_parse(month), _safe_parse(year))
     return jsonify(c.to_dict())
 @app.route('/hours', methods=['post'])
 def hours():
-    print('/hours')
+    if not check_for_user():
+        return redirect('/login')
     try:
         start = request.form.get('start-day')
         end = request.form.get('end-day')
@@ -105,17 +100,41 @@ def hours():
     except Exception as e:
         print('error', e)
         return redirect('/new')
+@app.route('/submitRequest', methods=['get','post'])
+def submit_request():
+    if not check_for_user():
+        return redirect('/login')
+    days = list()
+    for k in request.form:
+        if k == 'note':
+            note = request.form.get(k)
+        else:
+            date = Cal.parse_date(k)
+            hours = int(request.form.get(k))
+            days.append(RequestDay(date=date, hours=hours))
+    user = get_user();
+    pto = TimeOffRequest(note=note, days=days, employee_id=user.employee.employee_id)
+    DB.add_requests(pto)
+    return redirect('/')
 
 @app.route('/admin', methods=['get'])
 def admin():
     '''For system admins only'''
+    if not check_for_user():
+        return redirect('/login')
     if request.method == 'GET':
         return render_template('admin.html')
 @app.route('/approve', methods=['get'])
 def approve():
     '''for employee admins only'''
+    if not check_for_user():
+        return redirect('/login')
     if request.method == 'GET':
         return render_template('approve.html')
+@app.template_filter('date_string')
+def date_string(date_time):
+    return '{m}-{d}-{y}'.format(m=date_time.month,\
+    d=date_time.day, y=date_time.year)
 @app.template_filter('dow')
 def dow(day_number):
     if day_number == 0:
@@ -132,8 +151,8 @@ def dow(day_number):
         return 'fri'
     elif day_number ==6:
         return 'sat'
-
-
+def get_user():
+    return DB.get_user(session['username'])
 def _safe_parse(text):
     if text is None:
         return None
@@ -142,5 +161,20 @@ def _safe_parse(text):
     except ValueError:
         return None
 
+def check_for_user():
+    try:
+        session_username = session['username']
+        #will throw a ValueError if not a number
+        expiration = float(session['expiration'])
+        #get the current time in seconds
+        current = time.time()
+        #if the login has expired
+        if current > expiration:
+            del session['username']
+            del session['expiration']
+            return False
+    except Exception as e:
+        return False
+    return True
 if __name__ == '__main__':
     app.run(debug=True)
