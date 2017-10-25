@@ -1,11 +1,23 @@
 const gulp = require('gulp');
 const sass = require('gulp-sass');
 const bs = require('browser-sync');
-const exec = require('child_process').exec;
+const exec = require('child_process').spawn;
 const path = require('path');
 
 gulp.task('runserver', () => {
-    let proc = exec('python app.py');
+    let proc = exec('python', ['app.py']);
+    proc.stdout.on('data', data => {
+        console.log(data.toString());
+    });
+    proc.stderr.on('data', data => {
+        console.error(data.toString());
+    });
+    proc.stdin.on('data', data => {
+        console.log(data.toString())
+    })
+    proc.on('close', code => {
+        console.log('closing app.py with code', code);
+    });
 });
 
 gulp.task('browser-sync', ['runserver'], () => {
