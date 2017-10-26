@@ -13,6 +13,7 @@ class Employee(Base):
     first_name = Column(String)
     last_name = Column(String)
     hire_date = Column(DateTime)
+    accrual_rate = Column(Float)
     time_earned = relationship('Accrual', uselist=True)
     time_requested = relationship('TimeOffRequest', uselist=True)
     user = relationship('User', lazy='joined', uselist=False, back_populates='employee')
@@ -34,6 +35,9 @@ class TimeOffRequest(Base):
     approved = Column(Boolean, default=False)
     approved_by = Column(String)
     approved_date = Column(DateTime)
+    denied = Column(Boolean, default=False)
+    denied_by = Column(String)
+    denied_date = Column(DateTime)
     days = relationship('RequestDay', uselist=True)
     employee_id = Column(Integer, ForeignKey('employee.employee_id'))
 
