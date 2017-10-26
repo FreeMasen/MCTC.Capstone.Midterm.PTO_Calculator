@@ -18,7 +18,7 @@
             </div>
             <div class="input" id="hours-container">
                     <label for="hours">Hours Per Pay Period</label>
-                    <input id="hours" name="hours" type="text" min="0" />
+                    <input id="hours" name="hours" type="text" />
                 </div>
             <div class="input" id="username-container">
                 <label for="username">Username</label>
@@ -45,7 +45,7 @@
             <button id="cancel" type="button">Cancel</button>
             <button id="submit" type="submit">Submit</button>
         </form>
-        <form class="edit-user" action="/saveUsers" method="post">
+        <form class="edit-user" action="/saveUser" method="post">
             <h1>Current Users</h1>
             <div id="current-user-header">
                 <span class="delete">Delete</span>
@@ -53,10 +53,10 @@
                 <span class="current-last-name">Last Name</span>
                 <span class="current-hire-date">Hire Date</span>
                 <div class="roles">
-                    <span class="current-user">User</span>
-                    <span class="current-approver">Approver</span>
-                    <span class="current-admin">Admin</span>
-                </div>   
+                    <span>User</span>
+                    <span>Approver</span>
+                    <span>Admin</span>
+                </div>
             </div>
             <div id="current-user-body">
                 {% for emp in employees %}
@@ -67,12 +67,12 @@
                 <span class="current-last-name">{{emp.last_name}}</span>
                 <span class="current-hire-date">{{emp.hire_date | date_string}}</span>
                 <div class="roles">
-                    <input id="{{emp.employee_id}}-user-role" type="checkbox" {{('user', emp.user.roles)|checked}} class="role-selection"  />
-                    <input id="{{emp.employee_id}}-approver-role" type="checkbox" {{('approver', emp.user.roles)|checked}} class="role-selection" />
-                    <input id="{{emp.employee_id}}-admin-role" type="checkbox" {{('admin', emp.user.roles)|checked}} class="role-selection" />
+                    <input class="role-selection" type="checkbox" id="user-{{emp.employee_id}}" {{('user', emp.user.roles) | checked}} />
+                    <input class="role-selection" type="checkbox" id="approver-{{emp.employee_id}}" {{('approver', emp.user.roles) | checked}} />
+                    <input class="role-selection" type="checkbox" id="admin-{{emp.employee_id}}" {{('admin', emp.user.roles) | checked}} />
                 </div>
                 {% endfor %}
-                <input id="change-tracker" class="change-tracker" type="hidden" name="employee-changes" />
+                <input type="hidden" name="change-tracker" id="change-tracker" />
             </div>
             <div class="buttons">
                 <button type="button" id="clear">Clear</button>

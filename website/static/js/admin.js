@@ -43,7 +43,14 @@ function setDefultDate() {
     hireDate.value = new Date().toISOString().split('T')[0];;
 }
 
-
+function registerClearButton() {
+    let clearButton = document.querySelector('#clear');
+    if (!clearButton) return;
+    clearButton.addEventListener('click', () => {
+        clearCheckBoxes();
+        clearChanges();
+    });
+}
 
 function clearCheckBoxes() {
     let deleteBoxes = document.querySelectorAll('[name="delete-user"]');
@@ -52,52 +59,60 @@ function clearCheckBoxes() {
     }
 }
 
-function clearAllChanges() {
-    let trackers = document.querySelectorAll('.#change-tracker');
-    for (let tracker of trackers) {
-        let changes = JSON.parse(tracker.value);
+function clearChanges() {
+    let changes = getChanges();
+    for (let change of changes) {
+        let box = document.getElementById(change.inputId);
+        box.checked = !change.state
+    }
+    saveChanges([]);
+}
+
+function registerRoleCheckboxes() {
+    let boxes = document.querySelectorAll('.role-selection');
+    for (let box of boxes) {
+        box.addEventListener('change', roleChanged);
     }
 }
 
 function roleChanged(event) {
     let box = event.currentTarget;
-    if (!box) return;
-    let boxValues = box.id.split('-')
-    let empId = boxValues[0];
-    let roleName = boxValues[1];
-    let change = new Change(roleName, box.checked, box.id, empId);
-    let existingChanges = getChanges(empId);
-    let updatedChanges = updateChanges(existingChanges, change);
-    saveChanges(empId, updatedChanges);
+    let boxValues = box.id.split('-');
+    let role = boxValues[0];
+    let empId = boxValues[1];
+    let change = new Change(empId, role, box.checked, box.id);
+    let changes = getChanges();
+    let updatedChanges = updateChanges(changes, change);
+    saveChanges(updatedChanges);
+}
+
+function updateChanges(oldChanges, newChange) {
+    for (let i = 0; i < oldChanges.length;i++) {
+        let change = oldChanges[i];
+        if (change.role == newChange.role &&
+            change.empId == newChange.empId) {
+            oldChanges.splice(i,1);
+            return oldChanges;
+        }
+    }
+    return oldChanges.concat([newChange]);
 }
 
 function getChanges() {
-    let changeInput = document.querySelector(`#change-tracker`);
-    if (!changeInput || changeInput.value == '') return [];
-    return JSON.parse(changeInput.value);
+    let tracker = document.querySelector('#change-tracker');
+    if (!tracker || tracker.value == '') return [];
+    return JSON.parse(tracker.value);
 }
 
-function saveChanges(empId, changes) {
-    console.log('saveChanges', changes);
-    let changeInput = document.querySelector(`#change-tracker`);
-    if (!changeInput) return;
-    changeInput.value = JSON.stringify(changes);
+function saveChanges(changes) {
+    let tracker = document.querySelector('#change-tracker');
+    if (!tracker) return;
+    tracker.value = JSON.stringify(changes);
 }
 
-function updateChanges(existingChanges, newChange) {
-    let thisUsersChanges = existingChanges.filter(c => c.empId === newChange.empId);
-    for (let c of thisUsersChanges) {
-        if (c.role === newChange.role) {
-            return existingChanges.filter(ch => ch.role !== newChange.role);
-        }
-    }
-    existingChanges.push(newChange);
-    return existingChanges;
-}
-
-function Change(role, checked, checkboxId, empId) {
+function Change(empId, role, state, inputId) {
+    this.empId = empId;
     this.role = role;
-    this.checked = checked,
-    this.checkboxId = checkboxId,
-    this.empId = empId
+    this.state = state;
+    this.inputId = inputId;
 }

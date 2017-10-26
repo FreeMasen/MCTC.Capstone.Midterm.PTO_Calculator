@@ -30,12 +30,7 @@ class Database():
         except Exception as e:
             print(e)
             return None
-    def get_requests(self, employee_id):
-        '''get a list of requests for this employee'''
-        pass
-    def get_timeoff(self, employee_id):
-        '''get a list of accrued time off for an employee'''
-        pass
+
     def add_employee(self, employee):
         '''add a new employee'''
         try:
@@ -87,21 +82,36 @@ class Database():
             print(e)
             return False
     def update_user_roles(self, changes):
-        print('database->update_user_roles', changes)
-        try:
-            session = self._get_session()
-            for change in changes:
-                query = session.query(User).filter(User.employee_id == change['empId'])
-                if change['checked']:
-                    query.update({User.roles: User.roles + change['role']})
-                else:
-                    list(filter(lambda r: r != change['role'], User.roles))
-                    query.update({User.roles: list(filter(lambda r: r != change['role'], User.roles))})
-            session.commit()
-            print('update_user_roles complete')
-        except Exception as e:
-            print('update_user_roles error', e)
-
+        ROLES = {'user': 1, 'approver': 2, 'admin': 4}
+        session = self._get_session()
+        print('update_user_roles')
+        for change in changes:
+            print('applying change', change)
+            q = session.query(User).\
+            filter(User.employee_id == change['empId'])
+            r = ROLES[change['role']]
+            if change['state']:
+                q.update({User.roles: User.roles + r})
+            else:
+                q.update({User.roles: User.roles - r})
+        session.commit()
+    def approve_request(self, req_id, approver):
+        session = self._get_session()
+        pto = session.query(TimeOffRequest).\
+        filter(TimeOffRequest.request_id == req_id).\
+        first()
+        pto.approved = True
+        pto.approved_by = approver
+        pto.approved_date = datetime.today()
+        session.commit()
+    def deny_request(self, req_id, denier):
+        session = self._get_session()
+        pto = session.query(TimeOffRequest).\
+        filter(TimeOffRequest.request_id == req_id).\
+        first()
+        pto.denied = True
+        pto.denied_by = denier
+        pto.denied_date = datetime.today()
     def _get_session(self):
         session = sessionmaker(bind=self.engine)
         return session()

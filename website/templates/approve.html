@@ -1,0 +1,20 @@
+{%extends "layout.html"%}
+{%block content%}
+<div id="approve">
+    <div id="pending-requests">
+        <div class="pending-requests-header">
+        </div>
+        <div class="pending-requests-body">
+            {%for req in pending_requests%}
+            <div class="request">
+                {%for day in req.days%}
+                <span>{{day.date | date_string}}</span>
+                <span>{{day.hours}}</span>
+                <a href="/approve?reqId={{req.time_off.id}}&emp={{req.emp.employee_id}}" class="button">Approve</a>
+                {%endfor%}
+            </div>
+            {%endfor%}
+        </div>
+    </div>
+</div>
+{%endblock%}

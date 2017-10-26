@@ -13,9 +13,14 @@ class Employee(Base):
     first_name = Column(String)
     last_name = Column(String)
     hire_date = Column(DateTime)
+    accrual_rate = Column(Float)
     time_earned = relationship('Accrual', uselist=True)
     time_requested = relationship('TimeOffRequest', uselist=True)
+<<<<<<< HEAD
     user = relationship('User', uselist=False, back_populates='employee', lazy='joined')
+=======
+    user = relationship('User', lazy='joined', uselist=False, back_populates='employee')
+>>>>>>> ac98cf5daa647c1e2d6be01cbf09064442762559
 
 class Accrual(Base):
     '''Earned Paid Time Off'''
@@ -34,6 +39,9 @@ class TimeOffRequest(Base):
     approved = Column(Boolean, default=False)
     approved_by = Column(String)
     approved_date = Column(DateTime)
+    denied = Column(Boolean, default=False)
+    denied_by = Column(String)
+    denied_date = Column(DateTime)
     days = relationship('RequestDay', uselist=True)
     employee_id = Column(Integer, ForeignKey('employee.employee_id'))
 
@@ -49,6 +57,7 @@ class Roles(types.TypeDecorator):
     '''a user's list of roles'''
     impl = types.Integer
     def process_bind_param(self, value, dialect):
+        print('converting', value)
         ret = 0
         if value is None:
             return ret
@@ -59,8 +68,10 @@ class Roles(types.TypeDecorator):
                 ret += 2
             if role == 'admin':
                 ret += 4
+        print('converted', ret)
         return ret
     def process_result_value(self, value, dialect):
+        print('converting', value)
         ret = list()
         if value & 1 > 0:
             ret.append('user')
@@ -69,7 +80,9 @@ class Roles(types.TypeDecorator):
         if value & 4 > 0:
             ret.append('admin')
         return ret
-
+    def coerce_compared_value(self, op, value):
+        print('coerce_compared_value', op, value)
+        return self.impl.coerce_compared_value(op, value)
 class User(Base):
     '''A user, can be joined with an employee'''
     __tablename__ = 'user'
