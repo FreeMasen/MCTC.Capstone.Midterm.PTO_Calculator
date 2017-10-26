@@ -16,11 +16,7 @@ class Employee(Base):
     accrual_rate = Column(Float)
     time_earned = relationship('Accrual', uselist=True)
     time_requested = relationship('TimeOffRequest', uselist=True)
-<<<<<<< HEAD
-    user = relationship('User', uselist=False, back_populates='employee', lazy='joined')
-=======
     user = relationship('User', lazy='joined', uselist=False, back_populates='employee')
->>>>>>> ac98cf5daa647c1e2d6be01cbf09064442762559
 
 class Accrual(Base):
     '''Earned Paid Time Off'''

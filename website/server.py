@@ -144,10 +144,7 @@ def add_user():
     last_name = request.form.get('last-name')
     hire_date_text = request.form.get('hire-date')
     hire_date = Cal.parse_iso_date(hire_date_text)
-<<<<<<< HEAD
-=======
     accrual_rate = float(request.form.get('hours'))
->>>>>>> ac98cf5daa647c1e2d6be01cbf09064442762559
     username = request.form.get('username')
     password = request.form.get('password')
 
