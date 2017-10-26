@@ -30,12 +30,7 @@ class Database():
         except Exception as e:
             print(e)
             return None
-    def get_requests(self, employee_id):
-        '''get a list of requests for this employee'''
-        pass
-    def get_timeoff(self, employee_id):
-        '''get a list of accrued time off for an employee'''
-        pass
+
     def add_employee(self, employee):
         '''add a new employee'''
         try:
@@ -101,6 +96,23 @@ class Database():
             else:
                 q.update({User.roles: User.roles - r})
         session.commit()
+    def approve_request(self, req_id, approver):
+        session = self._get_session()
+        pto = session.query(TimeOffRequest).\
+        filter(TimeOffRequest.request_id == req_id).\
+        first()
+        pto.approved = True
+        pto.approved_by = approver
+        pto.approved_date = datetime.today()
+        session.commit()
+    def deny_request(self, req_id, denier):
+        session = self._get_session()
+        pto = session.query(TimeOffRequest).\
+        filter(TimeOffRequest.request_id == req_id).\
+        first()
+        pto.denied = True
+        pto.denied_by = denier
+        pto.denied_date = datetime.today()
     def _get_session(self):
         session = sessionmaker(bind=self.engine)
         return session()
