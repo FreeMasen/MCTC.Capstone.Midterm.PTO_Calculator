@@ -1,4 +1,5 @@
 import time
+import json
 from datetime import datetime
 from functools import reduce
 from flask import Flask, render_template, request, jsonify, redirect, session
@@ -151,11 +152,15 @@ def add_user():
     DB.add_employee(employee)
     return redirect('/admin')
 
-@app.route('/deleteUser', methods=['post'])
+@app.route('/saveUser', methods=['post'])
 def del_user():
-    print('deleteUser')
-    employee_ids = request.form.getlist('emp-id')
-    DB.delete_users(employee_ids)
+    print('saveUser')
+    del_ids = request.form.getlist('emp-id')
+    DB.delete_users(del_ids)
+    role_changes_text = request.form.get('change-tracker')
+    role_changes = json.loads(role_changes_text)
+    print(role_changes_text)
+    DB.update_user_roles(role_changes)
     return redirect('/admin')
 @app.route('/approve', methods=['get'])
 def approve():
@@ -164,7 +169,11 @@ def approve():
         return redirect('/login')
     if request.method == 'GET':
         return render_template('approve.html')
-
+@app.template_filter('checked')
+def checked(info):
+    if info[0] in info[1]:
+        return 'checked'
+    return ''
 @app.template_filter('date_string')
 def date_string(date_time):
     return '{m}-{d}-{y}'.format(m=date_time.month,\

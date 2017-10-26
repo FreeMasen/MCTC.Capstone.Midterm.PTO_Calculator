@@ -75,7 +75,7 @@
         #current-user-body {
             display: grid;
             grid-gap: 1px;
-            grid-template-columns: 0.25fr 0.5fr 0.5fr 0.5fr;
+            grid-template-columns: 0.25fr repeat(2, 0.5fr)0.25fr 0.75fr;
             .delete {
                 grid-column: 1;
             }
@@ -87,6 +87,16 @@
             }
             .current-hire-date {
                 grid-column: 4;
+            }
+            .roles {
+                text-align: center;
+                grid-column: 5;
+                display: flex;
+                flex-flow: row;
+                justify-content: space-around;
+                * {
+                    flex-basis: 33%;
+                }
             }
         }
         #current-user-header {

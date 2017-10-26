@@ -45,28 +45,38 @@
             <button id="cancel" type="button">Cancel</button>
             <button id="submit" type="submit">Submit</button>
         </form>
-        <form class="edit-user" action="/deleteUser" method="post">
+        <form class="edit-user" action="/saveUser" method="post">
             <h1>Current Users</h1>
             <div id="current-user-header">
                 <span class="delete">delete</span>
                 <span class="current-first-name">First Name</span>
                 <span class="current-last-name">Last Name</span>
                 <span class="current-hire-date">Hire Date</span>
+                <div class="roles">
+                    <span>User</span>
+                    <span>Approver</span>
+                    <span>Admin</span>
+                </div>
             </div>
             <div id="current-user-body">
                 {% for emp in employees %}
                 <div class="delete">
-                    <input type="checkbox" name="delete-user"  />
+                    <input type="checkbox" name="delete-user" value="{{emp.employee_id}}"  />
                 </div>
                 <span class="current-first-name">{{emp.first_name}}</span>
                 <span class="current-last-name">{{emp.last_name}}</span>
                 <span class="current-hire-date">{{emp.hire_date | date_string}}</span>
-                <input type="hidden" name="emp-id" value={{emp.employee_id}} />
+                <div class="roles">
+                    <input class="role-selection" type="checkbox" id="user-{{emp.employee_id}}" {{('user', emp.user.roles) | checked}} />
+                    <input class="role-selection" type="checkbox" id="approver-{{emp.employee_id}}" {{('approver', emp.user.roles) | checked}} />
+                    <input class="role-selection" type="checkbox" id="admin-{{emp.employee_id}}" {{('admin', emp.user.roles) | checked}} />
+                </div>
                 {% endfor %}
+                <input type="hidden" name="change-tracker" id="change-tracker" />
             </div>
             <div class="buttons">
                 <button type="button" id="clear">Clear</button>
-                <button type="submit" id="delete">Delete</button>
+                <button type="submit" id="save">Save</button>
             </div>
         </form>
     </div>

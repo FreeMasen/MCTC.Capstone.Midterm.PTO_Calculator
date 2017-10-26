@@ -87,6 +87,20 @@ class Database():
             session.commit()
         except:
             return False
+    def update_user_roles(self, changes):
+        ROLES = {'user': 1, 'approver': 2, 'admin': 4}
+        session = self._get_session()
+        print('update_user_roles')
+        for change in changes:
+            print('applying change', change)
+            q = session.query(User).\
+            filter(User.employee_id == change['empId'])
+            r = ROLES[change['role']]
+            if change['state']:
+                q.update({User.roles: User.roles + r})
+            else:
+                q.update({User.roles: User.roles - r})
+        session.commit()
     def _get_session(self):
         session = sessionmaker(bind=self.engine)
         return session()
