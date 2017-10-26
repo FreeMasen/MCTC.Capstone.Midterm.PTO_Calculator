@@ -141,14 +141,18 @@ def add_user():
     '''Add a new user/employee'''
     first_name = request.form.get('first-name')
     last_name = request.form.get('last-name')
-    hire_date = request.form.get('hire-date')
+    hire_date_text = request.form.get('hire-date')
+    hire_date = Cal.parse_iso_date(hire_date_text)
+    accrual_rate = float(request.form.get('hours'))
     username = request.form.get('username')
     password = request.form.get('password')
+
     roles = request.form.getlist('role')
     password_hash = bcrypt.hashpw(password, bcrypt.gensalt(15))
     user = User(username=username, password_hash=password_hash,roles=roles)
     employee = Employee(first_name=first_name, last_name=last_name,\
-    hire_date=hire_date, user=user)
+    hire_date=hire_date, user=user,\
+    accrual_rate=accrual_rate)
     DB.add_employee(employee)
     return redirect('/admin')
 
@@ -162,13 +166,22 @@ def del_user():
     print(role_changes_text)
     DB.update_user_roles(role_changes)
     return redirect('/admin')
+
 @app.route('/approve', methods=['get'])
 def approve():
     '''for employee admins only'''
     if not check_for_user():
         return redirect('/login')
-    if request.method == 'GET':
+    req_id = request.args.get('reqId')
+    if req_id is None:
         return render_template('approve.html')
+    DB.approve_request(req_id, session['username'])
+
+@app.route('/denyRequest')
+def deny():
+    req_id = request.args.get('reqId')
+    DB.deny_request(req_id, session['username'])
+
 @app.template_filter('checked')
 def checked(info):
     if info[0] in info[1]:
