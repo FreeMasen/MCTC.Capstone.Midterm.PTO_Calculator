@@ -31,21 +31,21 @@
             <div class="radio-group" id="roles-group">
                 <div class="input">
                     <label for="user-role">User</label>
-                    <input id="user-role" name="role" type="checkbox" checked="true" />
+                    <input id="user-role" name="role" type="checkbox" checked="true" value="user" />
                 </div>
                 <div class="input">
                     <label for="approver-role">Approver</label>
-                    <input id="approver-role" name="role" type="checkbox" />
+                    <input id="approver-role" name="role" type="checkbox" value="approver" />
                 </div>
                 <div class="input">
                     <label for="admin-role">Admin</label>
-                    <input id="admin-role" name="role" type="checkbox" />
+                    <input id="admin-role" name="role" type="checkbox" value="admin" />
                 </div>
             </div>
             <button id="cancel" type="button">Cancel</button>
             <button id="submit" type="submit">Submit</button>
         </form>
-        <form class="edit-user" action="/saveUser" method="post">
+        <form class="edit-user" action="/saveUsers" method="post">
             <h1>Current Users</h1>
             <div id="current-user-header">
                 <span class="delete">Delete</span>

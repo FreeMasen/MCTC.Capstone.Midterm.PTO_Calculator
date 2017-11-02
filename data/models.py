@@ -88,3 +88,11 @@ class User(Base):
     employee_id = Column(Integer, ForeignKey('employee.employee_id'))
     employee = relationship('Employee', back_populates='user')
     roles = Column(Roles)
+
+class Config(Base):
+    '''Global Configs'''
+    __tablename__ = 'config'
+    year = Column(Integer, primary_key=True)
+    pay_interval = Column(Integer)
+    first_payday = Column(DateTime)
+    default_password = Column(String)

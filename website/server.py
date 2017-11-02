@@ -147,8 +147,8 @@ def add_user():
     accrual_rate = float(request.form.get('hours'))
     username = request.form.get('username')
     password = request.form.get('password')
-
     roles = request.form.getlist('role')
+    print(roles)
     password_hash = bcrypt.hashpw(password, bcrypt.gensalt(15))
     user = User(username=username, password_hash=password_hash,roles=roles)
     employee = Employee(first_name=first_name, last_name=last_name,\
